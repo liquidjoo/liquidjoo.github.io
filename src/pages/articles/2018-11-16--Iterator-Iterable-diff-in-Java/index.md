@@ -36,9 +36,3 @@ while (iterator.hasNext()) {
             System.out.println(iiterator.next());
         }
 ```
-
-
-```
-출처
-https://www.techiedelight.com/differences-between-iterator-and-iterable-in-java/
-```
