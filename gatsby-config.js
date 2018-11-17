@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
-    url: 'https://mixberry.netlify.com',
-    title: 'Blog by Mixberry',
+    url: 'https://92bluemoon.netlify.com',
+    title: '푸른달 열나흘',
     subtitle: '이야기들',
     copyright: '© All rights reserved.',
     disqusShortname: '',
@@ -20,7 +20,7 @@ module.exports = {
       }
     ],
     author: {
-      name: 'mixberry',
+      name: '푸른달 열나흘',
       email: '#',
       telegram: '#',
       twitter: '#',
