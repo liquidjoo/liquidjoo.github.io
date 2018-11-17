@@ -3,14 +3,14 @@ title: Iterator, Iterable 차이점 [번역]
 date: "2018-11-18T02:00:00.121Z"
 layout: post
 draft: false
-path: "/posts/iterator-iterable"
+path: "/posts/iterator-iterable/"
 category: "Java Dev"
 tags:
   - "iterator"
   - "iterable"
 description: "Iterator, Iterable 차이를 알아보자"
 ---
-</br>
+
 Iterator 그리고 Iterable은 자바 컬렉션 인터페이스에서 제공을 하며 매우 비슷하고 종종 혼란을 주긴 하지만 Iterator, Iterable 다른 점이 있다.
 만약 어떤 클래스에 iterable 인터페이스를 implements를 하면 iterator를 사용해 클래스를 반복 작업을 할 수 있는 능력이 생긴다.
 </br>
