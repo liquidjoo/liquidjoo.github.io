@@ -22,7 +22,6 @@ for (String person: persons) {
     System.out.println(person);
 }
 ```
-
 다른 한편으로는 Iterator 인터페이스는 다른 객체, 다른 종류의 컬렉션을 순회하게 해준다. Iterator를 사용해 순회하기 위해서는 hasNext() + next() 메소드를 사용할 수가 있다.
 ```java
 Iterator <Integer> iterator = Arrays.asList(1, 2, 3, 4, 5).iterator();
@@ -30,7 +29,6 @@ while (iterator.hasNext()) {
             System.out.println(iiterator.next());
 }
 ```
-
 for-each loop에서 람다를 사용해서 Iterable 안의 Iterator로 컨버팅을 할 수 있다.
 ```java
 for (Integer i: (Iterable<Interger>) () -> iterator) {
