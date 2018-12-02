@@ -148,7 +148,7 @@ module.exports = {
               }
           }`,
         output: '/sitemap.xml',
-        exclude: ['/categories/', '/tags/'],
+        exclude: ['/categories/*', '/tags/*'],
         serialize: ({ site, allSitePage }) =>
           allSitePage.edges.map((edge) => {
             return {
