@@ -3,7 +3,7 @@ title: 동적 정적 프로그래밍 언어에서의 정리
 date: "2018-11-23T02:00:00.121Z"
 layout: post
 draft: false
-path: "/posts/dynamic-static/"
+path: "/posts/dynamic-static"
 category: "Dev"
 tags:
   - "dynamic"

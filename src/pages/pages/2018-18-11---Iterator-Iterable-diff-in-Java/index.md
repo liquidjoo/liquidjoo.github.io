@@ -3,7 +3,7 @@ title: Iterator, Iterable 차이점 [번역]
 date: "2018-11-18T02:00:00.121Z"
 layout: post
 draft: false
-path: "/posts/iterator-iterable/"
+path: "/posts/iterator-iterable"
 category: "Java Dev"
 tags:
   - "iterator"
