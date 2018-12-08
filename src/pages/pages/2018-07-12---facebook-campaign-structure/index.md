@@ -42,7 +42,7 @@ public class SAMPLE_CODE_EXAMPLE {
   }
 }
 
-```
+```ㅍ
 - 노출수, 클릭수, 지출 금액 등의 높은 수준의 인사이트도 표시됩니다.
 ```java
 APINodeList<AdsInsights> adsInsightss = new Campaign(<CAMPAIGN_ID>, context).getInsights()
@@ -53,6 +53,91 @@ APINodeList<AdsInsights> adsInsightss = new Campaign(<CAMPAIGN_ID>, context).get
   .execute();
 ```
 
+### 광고 세트
+- 광고 세트는 여러 광고가 포함된 그룹으로, 이러한 광고를 게재할 예산과 기간을 설정합니다. 하나의 광고 세트에 포함된 모든 광고는 동일한 타게팅을 가집니다.
+
+```java
+AdSet adSet = new AdAccount(act_<AD_ACCOUNT_ID>, context).createAdSet()
+  .setName("My First AdSet")
+  .setLifetimeBudget(20000L)
+  .setStartTime(<START_TIME>)
+  .setEndTime(<END_TIME>)
+  .setCampaignId(<CAMPAIGN_ID>)
+  .setBidAmount(500L)
+  .setBillingEvent(AdSet.EnumBillingEvent.VALUE_IMPRESSIONS)
+  .setOptimizationGoal(AdSet.EnumOptimizationGoal.VALUE_POST_ENGAGEMENT)
+  .setTargeting(
+    new Targeting()
+      .setFieldAgeMax(24L)
+      .setFieldAgeMin(20L)
+      .setFieldBehaviors(Arrays.asList(
+        new IDName()
+          .setFieldId("6002714895372")
+          .setFieldName("All travelers")
+      ))
+      .setFieldGenders(Arrays.asList(1L))
+      .setFieldGeoLocations(
+        new TargetingGeoLocation()
+          .setFieldCities(Arrays.asList(
+            new TargetingGeoLocationCity()
+              .setFieldDistanceUnit("mile")
+              .setFieldKey("2420605")
+              .setFieldRadius(10L)
+          ))
+          .setFieldCountries(Arrays.asList("JP"))
+          .setFieldRegions(Arrays.asList(
+            new TargetingGeoLocationRegion()
+              .setFieldKey("3886")
+          ))
+      )
+      .setFieldHomeOwnership(Arrays.asList(
+        new IDName()
+          .setFieldId("6006371327132")
+          .setFieldName("Renters")
+      ))
+      .setFieldInterests(Arrays.asList(
+        new IDName()
+          .setFieldId("6003107902433")
+          .setFieldName("Association football (Soccer)")
+      ))
+      .setFieldLifeEvents(Arrays.asList(
+        new IDName()
+          .setFieldId("6002714398172")
+          .setFieldName("Newlywed (1 year)")
+      ))
+      .setFieldPublisherPlatforms(Arrays.asList("facebook", "audience_network"))
+  )
+  .setStatus(AdSet.EnumStatus.VALUE_PAUSED)
+  .execute();
+String ad_set_id = adSet.getId();
+```
+
+- UI에서 캠페인 내 모든 광고 세트를 나열하고 싶은 경우 원하는 필드와 상태를 지정하여 다음 경로에 대한 요청을 작성하세요.
+```java
+import com.facebook.ads.sdk.*;
+import java.io.File;
+import java.util.Arrays;
+
+public class SAMPLE_CODE_EXAMPLE {
+  public static void main (String args[]) throws APIException {
+
+    String access_token = \"<ACCESS_TOKEN>\";
+    String app_secret = \"<APP_SECRET>\";
+    String app_id = \"<APP_ID>\";
+    String id = \"<ID>\";
+    APIContext context = new APIContext(access_token).enableDebug(true);
+
+    new Campaign(id, context).getAdSets()
+      .requestNameField()
+      .requestStartTimeField()
+      .requestEndTimeField()
+      .requestDailyBudgetField()
+      .requestLifetimeBudgetField()
+      .execute();
+
+  }
+}
+```
 
 - 전체 목표 리스트는 ```https://developers.facebook.com/docs/marketing-api/reference/ad-campaign-group``` 참고
 
