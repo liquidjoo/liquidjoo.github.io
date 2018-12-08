@@ -139,6 +139,58 @@ public class SAMPLE_CODE_EXAMPLE {
 }
 ```
 
+### 광고
+- 광고 개체에는 크리에이티브를 포함하여 Facebook에 광고를 표시하는 데 필요한 모든 정보가 포함됩니다.
+```java
+import com.facebook.ads.sdk.*;
+import java.io.File;
+import java.util.Arrays;
+
+public class SAMPLE_CODE_EXAMPLE {
+  public static void main (String args[]) throws APIException {
+
+    String access_token = \"<ACCESS_TOKEN>\";
+    String app_secret = \"<APP_SECRET>\";
+    String app_id = \"<APP_ID>\";
+    String id = \"<ID>\";
+    APIContext context = new APIContext(access_token).enableDebug(true);
+
+    new AdAccount(id, context).createAd()
+      .setName(\"My Ad\")
+      .setAdsetId(<adSetID>L)
+      .setCreative(
+          new AdCreative()
+            .setFieldId(\"<adCreativeID>\")
+        )
+      .setStatus(Ad.EnumStatus.VALUE_PAUSED)
+      .execute();
+
+  }
+}
+```
+
+- 이제 UI에 광고 세트의 모든 광고를 나열할 차례입니다. 이렇게 하려면 검색할 필드를 지정하여 다음 경로에 대한 요청을 작성하세요.
+```java
+APINodeList<Ad> ads = new AdSet(<AD_SET_ID>, context).getAds()
+  .setEffectiveStatus("[\"ACTIVE\",\"PAUSED\",\"PENDING_REVIEW\",\"PREAPPROVED\"]")
+  .requestNameField()
+  .requestConfiguredStatusField()
+  .requestEffectiveStatusField()
+  .requestCreativeField()
+  .execute();
+```
+- 전체 광고 수가 하나의 페이지에 표시할 수보다 큰 경우 가져올 항목 수로 limit 필드를 지정하고 남은 항목에는 페이지를 매겨야 합니다.
+
+- 페이지 매기기는 응답의 일부로 반환된 커서를 사용하여 수행됩니다.
+```json
+"paging": {
+  "previous" : "https://graph.facebook.com/...",
+  "next": "https://graph.facebook.com/...", 
+  "cursors": {
+    "before": "NjAxNjc3NTU1ODMyNw==", 
+    "after": "NjAxMTc0NTU2MjcyNw=="
+  }
+```
 - 전체 목표 리스트는 ```https://developers.facebook.com/docs/marketing-api/reference/ad-campaign-group``` 참고
 
 ```
