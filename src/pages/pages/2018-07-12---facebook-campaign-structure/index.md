@@ -42,7 +42,7 @@ public class SAMPLE_CODE_EXAMPLE {
   }
 }
 
-```ㅍ
+```
 - 노출수, 클릭수, 지출 금액 등의 높은 수준의 인사이트도 표시됩니다.
 ```java
 APINodeList<AdsInsights> adsInsightss = new Campaign(<CAMPAIGN_ID>, context).getInsights()
@@ -141,6 +141,7 @@ public class SAMPLE_CODE_EXAMPLE {
 
 ### 광고
 - 광고 개체에는 크리에이티브를 포함하여 Facebook에 광고를 표시하는 데 필요한 모든 정보가 포함됩니다.
+
 ```java
 import com.facebook.ads.sdk.*;
 import java.io.File;
