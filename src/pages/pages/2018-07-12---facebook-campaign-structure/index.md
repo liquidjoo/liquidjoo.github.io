@@ -190,11 +190,73 @@ APINodeList<Ad> ads = new AdSet(<AD_SET_ID>, context).getAds()
     "before": "NjAxNjc3NTU1ODMyNw==", 
     "after": "NjAxMTc0NTU2MjcyNw=="
   }
-```
-- 전체 목표 리스트는 ```https://developers.facebook.com/docs/marketing-api/reference/ad-campaign-group``` 참고
 
 ```
 
+### 목표
+- 목표는 광고를 통해 사람들에게 유도할 액션이며, 개체는 사람들이 액션을 수행하는 기반을 말합니다. 
+
+#### 목표 설정
+새 캠페인, 광고 세트, 광고, 광고 크리에이티브 개체를 만든 후 각 개체를 만들기 위한 필수 필드를 제공하세요. 캠페인을 만드는 데 필요한 최소 API 호출은 다음과 같습니다
+
+```java
+import com.facebook.ads.sdk.*;
+import java.io.File;
+import java.util.Arrays;
+
+public class SAMPLE_CODE_EXAMPLE {
+  public static void main (String args[]) throws APIException {
+
+    String access_token = \"<ACCESS_TOKEN>\";
+    String app_secret = \"<APP_SECRET>\";
+    String app_id = \"<APP_ID>\";
+    String id = \"<ID>\";
+    APIContext context = new APIContext(access_token).enableDebug(true);
+
+    new AdAccount(id, context).createCampaign()
+      .setName(\"My First Campaign\")
+      .setObjective(Campaign.EnumObjective.VALUE_PAGE_LIKES)
+      .setStatus(Campaign.EnumStatus.VALUE_PAUSED)
+      .execute();
+
+  }
+}
 ```
+
+
+- 목표를 명시적으로 설정할 경우 광고에 대해 적절한 추적, 최적화, 입찰 옵션을 얻을 수 있습니다. 각 목표에 대한 고유 UI 및 분석 대시보드를 볼 수 있습니다.
+
+
+```java
+import com.facebook.ads.sdk.*;
+import java.io.File;
+import java.util.Arrays;
+
+public class SAMPLE_CODE_EXAMPLE {
+  public static void main (String args[]) throws APIException {
+
+    String access_token = \"<ACCESS_TOKEN>\";
+    String app_secret = \"<APP_SECRET>\";
+    String app_id = \"<APP_ID>\";
+    String id = \"<ID>\";
+    APIContext context = new APIContext(access_token).enableDebug(true);
+
+    new AdAccount(id, context).createCampaign()
+      .setName(\"My First Campaign\")
+      .setObjective(Campaign.EnumObjective.VALUE_POST_ENGAGEMENT)
+      .setStatus(Campaign.EnumStatus.VALUE_PAUSED)
+      .execute();
+
+  }
+}
+```
+
+
+####전체 목표 리스트는 
+```https://developers.facebook.com/docs/marketing-api/reference/ad-campaign-group``` 참고
+
+
+```
+참조
 https://developers.facebook.com/docs/marketing-api/buying-api
 ```
