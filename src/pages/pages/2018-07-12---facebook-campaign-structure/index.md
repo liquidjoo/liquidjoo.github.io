@@ -4,7 +4,7 @@ date: "2018-12-07T19:00:00.121Z"
 layout: post
 draft: false
 path: "/posts/facebook-campaign-structure"
-category: "facebook", "marketing"
+category: "Dev"
 description: "페이스북 광고를 위한 캠페인 구조"
 ---
 
