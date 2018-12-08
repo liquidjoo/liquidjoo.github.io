@@ -113,6 +113,7 @@ String ad_set_id = adSet.getId();
 ```
 
 - UI에서 캠페인 내 모든 광고 세트를 나열하고 싶은 경우 원하는 필드와 상태를 지정하여 다음 경로에 대한 요청을 작성하세요.
+
 ```java
 import com.facebook.ads.sdk.*;
 import java.io.File;
@@ -165,7 +166,6 @@ public class SAMPLE_CODE_EXAMPLE {
         )
       .setStatus(Ad.EnumStatus.VALUE_PAUSED)
       .execute();
-
   }
 }
 ```
