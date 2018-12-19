@@ -32,7 +32,6 @@ export const pageQuery = graphql`
         subtitle
         author {
           name
-          twitter
         }
         disqusShortname
         url
