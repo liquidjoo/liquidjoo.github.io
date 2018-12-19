@@ -71,11 +71,7 @@ export const conponentQuery = graphql`
     author {
       name
       email
-      telegram
-      twitter
       github
-      rss
-      vk
     }
   }
 `;
