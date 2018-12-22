@@ -22,7 +22,7 @@ module.exports = {
     author: {
       name: '푸른달 열나흘',
       email: 'liquidjoo@gmail.com',
-      github: 'https://github.com/liquidjoo',
+      github: 'liquidjoo',
     }
   },
   plugins: [
