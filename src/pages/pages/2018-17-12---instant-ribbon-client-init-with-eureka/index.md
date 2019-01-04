@@ -37,18 +37,36 @@ eureka.client.register-with-eureka=false
 eureka.client.fetch-registry=false
 eureka.client.service-url.defaultZone = http://127.0.0.1:8761/eureka
 eureka.instance.ip-address=true
-
 ```
 
-#### 그리고 client
+#### 그리고 client configuration
 ```
 spring.application.name=appName
 server.port=9999
 eureka.instance.prefer-ip-address=true
 eureka.client.service-url.defalutZone=http://127.0.0.1:8761/eureka
-
 ```
 
+유레카 서버에 'appName'으로 등록이 되면 plain URL 대신 리본의 로드밸런스 RestTemplate와 appName (service name)으로 접근이 가능하다.
+http://localhost -> http://appName으로 remote call이 가능하게 된다. 이렇게 유레카 서버에 등록된 서비스명으로 접근하기 위해선 최소 30초의 초기화시간이 필요하다.
+
+#### log를 보자
+```
+logging:
+  level:
+    com:
+      netflix:
+        loadbalancer: debug
+```
+
+```
+$ tail -f appName.log | grep "addServer\|clearing"
+DEBUG 19080 --- [erListUpdater-0 c.netflix.loadbalancer.BaseLoadBalancer  : LoadBalancer [appName_defaultzone]:  addServer [192.168.0.14:9999]
+```
+ addServer 까지의 시간이 30초가 걸린다.
+
+
+![ribbon-eureka-flow](./ribbon-eureka-flow.png)
 ```
 참조
 http://lifeinide.com/post/2017-12-07-instant-ribbon-client-init-with-eureka/
