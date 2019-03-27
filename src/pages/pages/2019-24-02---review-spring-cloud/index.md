@@ -47,6 +47,66 @@ description: "용어들 정리"
 - MSA로 개발 (hystrix로 인해 각 함수별 설정값이 필요..)
 
 - 현재 애플리케이션의 모든 통신은 API 통신
+
+- 일단 시작
+
+#### 현재 dependencies 
+```
+dependencies {
+    implementation('org.springframework.retry:spring-retry:1.2.2.RELEASE')  // spring cloud requires spring-retry for auto-retry
+    implementation('org.springframework.cloud:spring-cloud-starter-openfeign')  // To use Feign
+//    implementation('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client') // 3. To use Eureka client
+//    implementation('org.springframework.cloud:spring-cloud-starter-netflix-ribbon')  // 2. To use ribbon
+    implementation('org.springframework.cloud:spring-cloud-starter-netflix-hystrix') // 1. To use spring-cloud-hystrix
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation('org.springframework.boot:spring-boot-starter-jdbc')
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('org.springframework.boot:spring-boot-starter-actuator')
+    implementation('com.squareup.okhttp3:okhttp:3.9.1')
+    compileOnly('org.projectlombok:lombok')
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    compile('mysql:mysql-connector-java')
+}
+
+```
+- 유레카랑 리본은 아직 오버 스펙이라 생각이 들기에 테스트만 해보고 실질적으로 도입은 하지 않는 걸로 결정!!
+
+- 유레카를 쓰려면 유레카 서버를 또 관리해야하기 때문에 ㅠ 생각보다 많은 자원을 먹을 것 같아서.. 포기
+
+#### 개발
+- 스케줄링은 별 다른 기능은 없이 순수 task 작업으로 이루어져 있음.
+
+- 동시에 작업을 위해 멀티쓰레드 사용 (ExecutorService)
+```java
+ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+```
+
+- 리턴 값이 필요했기에 Runnable 보단 Callable 사용
+
+- 리스트에서 데이터를 가져가는데 있어서 중복된 값을 막기 위해 LinkedBlockingQueue 사용
+
+- 스케줄링 작업을 위한 데이터는 FeignClient를 통해 Api Call
+
+- Hystrix를 사용해 fallback 조건 조정
+```
+hystrix.command.Service#function(params).execution.isolation.thread.timeoutInMilliseconds=2000
+hystrix.command.Service#function(params).circuitBreaker.requestVolumeThreshold=20
+hystrix.command.Service#function(params).errorThresholdPercentage=50
+```
+
+- FeignClient내의 fallbackFactory를 사용해 fallback 리턴 값 조정
+```java
+    @Override
+    public String create(Throwable cause) {
+        System.out.println("t=" + cause);
+        return "cause: " + cause;
+    }
+
+```
+
+
+
 ```
 출처 - 
 ```
