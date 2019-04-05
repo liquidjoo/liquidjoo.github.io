@@ -5,7 +5,7 @@ layout: post
 draft: false
 path: "/posts/review-spring-cloud/"
 category: "Dev"
-description: "용어들 정리"
+description: "적용 후기"
 ---
 
 #### 운영 중인 서비스에 spring cloud 적용기
