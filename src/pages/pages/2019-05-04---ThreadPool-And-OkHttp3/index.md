@@ -70,23 +70,27 @@ public String callApi(String query, String method) {
 - 일단 카피카피! 시작
 
 #### 새롭게 만들어진 로직?
-```
-dependencies {
-    implementation('org.springframework.retry:spring-retry:1.2.2.RELEASE')  // spring cloud requires spring-retry for auto-retry
-    implementation('org.springframework.cloud:spring-cloud-starter-openfeign')  // To use Feign
-//    implementation('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client') // 3. To use Eureka client
-//    implementation('org.springframework.cloud:spring-cloud-starter-netflix-ribbon')  // 2. To use ribbon
-    implementation('org.springframework.cloud:spring-cloud-starter-netflix-hystrix') // 1. To use spring-cloud-hystrix
-    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-    implementation('org.springframework.boot:spring-boot-starter-jdbc')
-    implementation('org.springframework.boot:spring-boot-starter-web')
-    implementation('org.springframework.boot:spring-boot-starter-actuator')
-    implementation('com.squareup.okhttp3:okhttp:3.9.1')
-    compileOnly('org.projectlombok:lombok')
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
-    compile('mysql:mysql-connector-java')
-}
+```java
+public static ListenableFuture<ResponseWrapper> invoke(okhttp3.OkHttpClient client, okhttp3.Request request) {
+            final SettableFuture<ResponseWrapper> future = SettableFuture.create();
+            client.newCall(request).enqueue(
+                    new okhttp3.Callback() {
+
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            future.setException(
+                                    new IOException(e)
+                            );
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            future.set(new ResponseWrapper(response.body().string(), convertToString(response.headers())));
+                        }
+                    }
+            );
+            return future;
+        }
 
 ```
 - 유레카랑 리본은 아직 오버 스펙이라 생각이 들기에 테스트만 해보고 실질적으로 도입은 하지 않는 걸로 결정!!
