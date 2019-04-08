@@ -59,6 +59,8 @@ public String callApi(String query, String method) {
 #### 그럼?
 - 코드의 메모리 누수(memory leaks)를 찾아야 한다.
 
+- 힙 메모리를 많이 차지하는 객체가 무엇인지, 어떤 코드인지 찾자
+
 - 우선 다른 일정도 많이 밀려있기에 HttpURLCollection 객체를 사용해서 만든 로직을 폐기..
 
 - 로직이 멀티쓰레드로 동작한다면 로직내의 Http 통신 조차 비동기로 하면 된다고 생각!
@@ -93,43 +95,45 @@ public static ListenableFuture<ResponseWrapper> invoke(okhttp3.OkHttpClient clie
         }
 
 ```
-- 유레카랑 리본은 아직 오버 스펙이라 생각이 들기에 테스트만 해보고 실질적으로 도입은 하지 않는 걸로 결정!!
 
-- 유레카를 쓰려면 유레카 서버를 또 관리해야하기 때문에 ㅠ 생각보다 많은 자원을 먹을 것 같아서.. 포기
+#### 잘되네?
+- 우선 위의 http call 메소드를 okhttp3로 변경하여 비동기로 GET 하니 잘 된다!
 
-#### 개발
-- 스케줄링은 별 다른 기능은 없이 순수 task 작업으로 이루어져 있음.
-
-- 동시에 작업을 위해 멀티쓰레드 사용 (ExecutorService)
+- 일단 HttpURLConnection 객체보단 okhttp3의 내부를 봐야겠다
 ```java
-ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+// 호출 부분
+// web socket이 false 처리? 왜징
+@Override public Call newCall(Request request) {
+    return RealCall.newRealCall(this, request, false /* for web socket */);
+  }
+
+// 생성자
+private RealCall(OkHttpClient client, Request originalRequest, boolean forWebSocket) {
+    this.client = client;
+    this.originalRequest = originalRequest;
+    this.forWebSocket = forWebSocket;
+    this.retryAndFollowUpInterceptor = new RetryAndFollowUpInterceptor(client, forWebSocket);
+  }
+
+// 실질적인 로직
+
+static RealCall newRealCall(OkHttpClient client, Request originalRequest, boolean forWebSocket) {
+    // Safely publish the Call instance to the EventListener.
+    RealCall call = new RealCall(client, originalRequest, forWebSocket);
+    call.eventListener = client.eventListenerFactory().create(call);
+    return call;
+  }
 ```
 
-- 리턴 값이 필요했기에 Runnable 보단 Callable 사용
+- okhttp3는 이벤트 리스너이고, 이 클래스를 활용해서 HTTP 호출 수량, 크기 및 기간을 모니터링 및 작업을 할 수 있다.
 
-- 리스트에서 데이터를 가져가는데 있어서 중복된 값을 막기 위해 LinkedBlockingQueue 사용
+- 문서를 보니 파일이나 네트워크에 대한 IO 쓰기 작업은 비동기적으로 실행이 되어야 한다는데.. 내가 호출전에 처리한 비동기 처리가 이 처리를 뜻하는지는 아직 잘 모르겠다.
 
-- 스케줄링 작업을 위한 데이터는 FeignClient를 통해 Api Call
+- 문서링크: https://square.github.io/okhttp/3.x/okhttp/okhttp3/EventListener.html
 
-- Hystrix를 사용해 fallback 조건 조정
-```
-hystrix.command.Service#function(params).execution.isolation.thread.timeoutInMilliseconds=2000
-hystrix.command.Service#function(params).circuitBreaker.requestVolumeThreshold=20
-hystrix.command.Service#function(params).errorThresholdPercentage=50
-```
-
-- FeignClient내의 fallbackFactory를 사용해 fallback 리턴 값 조정
-```java
-    @Override
-    public String create(Throwable cause) {
-        System.out.println("t=" + cause);
-        return "cause: " + cause;
-    }
-
-```
 
 
 
 ```
-출처 - 
+한 마디 - 시간적 여유를 내서 디테일하게 꼭 다시 정리해야지
 ```
