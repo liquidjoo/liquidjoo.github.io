@@ -106,7 +106,9 @@ public static ListenableFuture<ResponseWrapper> invoke(okhttp3.OkHttpClient clie
 @Override public Call newCall(Request request) {
     return RealCall.newRealCall(this, request, false /* for web socket */);
   }
+```
 
+```java
 // 생성자
 private RealCall(OkHttpClient client, Request originalRequest, boolean forWebSocket) {
     this.client = client;
@@ -114,7 +116,9 @@ private RealCall(OkHttpClient client, Request originalRequest, boolean forWebSoc
     this.forWebSocket = forWebSocket;
     this.retryAndFollowUpInterceptor = new RetryAndFollowUpInterceptor(client, forWebSocket);
   }
+```
 
+```java
 // 실질적인 로직
 
 static RealCall newRealCall(OkHttpClient client, Request originalRequest, boolean forWebSocket) {
