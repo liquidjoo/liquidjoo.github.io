@@ -33,7 +33,6 @@ description: "ResourceServerConfigurer WebSecurityConfigurer 차이점"
 
 
 #### @EnableResourceServer
-- 클래스를 쫓아 주석을 보고 충격을 받았다.
 ```java
  Convenient annotation for OAuth2 Resource Servers, enabling a Spring Security filter that authenticates requests via
  an incoming OAuth2 token. Users should add this annotation and provide a <code>@Bean</code> of type
