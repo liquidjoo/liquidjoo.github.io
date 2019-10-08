@@ -58,6 +58,25 @@ null이 발생하게 되면 Authenticaion의 결과는 AuthenticaionException(Ru
 ![authentication](./authentication.png)
 
 
+#### Customizing Authentication Managers
+---
+AuthenticationManagerBuilder를 사용해서 in-memory, JDBC or LDAP 로 user details or custom UserDetailsService를 설정 할 수 있다.  
+global(parent) AuthenticationManager configuring을 통한 예제
+```java
+@Configuration
+public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
+
+   ... // web stuff here
+
+  @Autowired
+  public void initialize(AuthenticationManagerBuilder builder, DataSource dataSource) {
+    builder.jdbcAuthentication().dataSource(dataSource).withUser("dave")
+      .password("secret").roles("USER");
+  }
+
+}
+```
+
 
 
 ```
