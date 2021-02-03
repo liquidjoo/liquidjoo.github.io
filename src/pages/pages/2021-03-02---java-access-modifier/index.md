@@ -3,7 +3,7 @@ title: java protected default 차이
 date: "2021-02-03T20:11:00.121Z"
 layout: post
 draft: false
-path: "/posts/java/default-protected-diff
+path: "/posts/java/default-protected-diff"
 category: "Dev"
 description: "자바 protected default 접근제어자"
 ---
