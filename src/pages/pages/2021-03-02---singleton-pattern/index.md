@@ -3,7 +3,7 @@ title: 싱글톤 패턴 (singleton pattern)
 date: "2021-02-03T20:45:00.121Z"
 layout: post
 draft: false
-path: "/posts/java/singleton-pattern
+path: "/posts/java/singleton-pattern"
 category: "Dev"
 description: "자바 싱글톤 패턴"
 ---
