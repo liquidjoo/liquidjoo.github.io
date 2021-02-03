@@ -3,7 +3,7 @@ title: java exception error 차이
 date: "2021-02-01T14:57:00.121Z"
 layout: post
 draft: false
-path: "/posts/exception-error-diff"
+path: "/posts/java/exception-error-diff"
 category: "Dev"
 description: "자바 예외와 에러 차이"
 ---
