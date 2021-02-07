@@ -38,6 +38,61 @@ description: "자바 쓰레드 세이프한, 멀티쓰레드 싱글톤 패턴"
 하지만, synchronized getinstance()의 경우 인스턴스를 리턴 받을 때마다 Thread동기화 때문에 불필요하게 lock이 걸리게 되어 비용 낭비가 크다. 실제로 고전적인 방식에서 인스턴스가 2개 이상 생성될 확률은 매우 적다. 또한 최초 instance초기화 문제 때문에 synchronized를 추가하였는데, 초기화가 완료된 시점 이후라면 synchronized는 불필요하게 lock을 잡을 뿐 별다른 역할을 하지 못한다
 
 
+#### DCL(Double-Checked-Locking) Singleton 패턴
+```java
+public class Singleton {
+    private static Singleton instance;
+
+    private Singleton() {
+    }
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            synchronized (Singleton.class) {
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+}
+```
+
+위에 제시 된 synchronized 를 이용한 singleton 패턴의 문제를 한마디로 요약하면, 인스턴스 할당시점만 synchronized 처리되면 될 문제를 getInstance() 전체를 synchronized처리하여 성능문제를 야기한다는 점이다. 그래서 고안된 방법이DCL(Double-Checked-Locking) singleton패턴이다.
+
+DCL singleton패턴은 getInstance() 내부에서 instance를 생성하는 경우만 부분적으로 synchronized 처리를 하여 생성과 획득을 분리한 획기적인 방법이다. 즉 인스턴스가 생성되어 있는지 확인해보고 인스턴스가 없는 경우 lock을 잡고 instance를 생성하는 방법이다.
+
+그런데 여기에도 문제가 있다. 소스코드 논리적으로는 문제가 없지만 컴파일러에 따라서 재배치(reordering)문제를 야기한다.  위에 소스가 컴파일 되는 경우 인스턴스 생성은 아래와 같은 과정을 거치게 된다.
+
+
+```java
+public static Singleton getInstance() {
+
+        if (instance == null) { // Thread B 수행
+
+            synchronized (Singleton.class) {
+
+                if (instance == null) {
+
+                    // instance = new Singleton(); 아래와 같이 변환 됨
+
+                    some_space = allocate space for Singleton object;
+
+                    instance = some_space; // Thread A가 수행
+
+                    create a real object in some_space; // 실제 오브젝트 할당
+                }
+            }
+        }
+        return instance;
+    }
+```
+
+멀티스레드 환경일 경우 각 스레드마다 동일 메모리를 공유하는 것이 아닌 별도 메모리 공간(CPU캐시)에서 변수를 읽어온다. 이런 경우 각 스레드마다 동일한 변수의 값을 다르게 기억할 수 있다. 만약 Thread A가 인스턴스 생성을 위해서 instance = some_space;를 수행하는 순간 Thread B가 Singleton.getInstance()를 호출하게 되면 아직 실제로 인스턴스가 생성되지 않았지만, Thread B는 instance == null 의 결과가 false로 리턴되어 문제를 야기하게 된다.
+
+
+
 ```
 출처
 https://javaplant.tistory.com/21
