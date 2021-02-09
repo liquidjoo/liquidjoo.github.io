@@ -91,6 +91,30 @@ public static Singleton getInstance() {
 
 멀티스레드 환경일 경우 각 스레드마다 동일 메모리를 공유하는 것이 아닌 별도 메모리 공간(CPU캐시)에서 변수를 읽어온다. 이런 경우 각 스레드마다 동일한 변수의 값을 다르게 기억할 수 있다. 만약 Thread A가 인스턴스 생성을 위해서 instance = some_space;를 수행하는 순간 Thread B가 Singleton.getInstance()를 호출하게 되면 아직 실제로 인스턴스가 생성되지 않았지만, Thread B는 instance == null 의 결과가 false로 리턴되어 문제를 야기하게 된다.
 
+#### volatile를 이용한 개선된 DCL
+```java
+public class Singleton {
+        private volatile static Singleton instance;
+
+        private Singleton() {
+        }
+
+        public static Singleton getInstance() {
+            if (instance == null) {
+                synchronized (Singleton.class) {
+                    if (instance == null) {
+                        instance = new Singleton();
+                    }
+                }
+            }
+            return instance;
+        }
+    }
+```
+
+volatile키워드를 이요하는 경우 instance는 CPU캐시에서 변수를 참조하지 않고 메인 메모리에서 변수를 참조한다.
+그래서 위에서 초기에 제시된 DCL singleton패턴에서 reorder문제가 발생하지 않는다. 현재까지는 안정적이고 문제가 없는 방법으로 인정되고 있다. 
+DCL singleton패턴을 사용한다면 반드시 volatile 접근제한자를 추가하여 주도록 하자.
 
 
 ```
