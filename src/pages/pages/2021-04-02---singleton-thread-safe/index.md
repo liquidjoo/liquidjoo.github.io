@@ -116,6 +116,27 @@ volatile키워드를 이요하는 경우 instance는 CPU캐시에서 변수를 �
 그래서 위에서 초기에 제시된 DCL singleton패턴에서 reorder문제가 발생하지 않는다. 현재까지는 안정적이고 문제가 없는 방법으로 인정되고 있다. 
 DCL singleton패턴을 사용한다면 반드시 volatile 접근제한자를 추가하여 주도록 하자.
 
+#### LazyHolder Singleton 패턴
+```java
+public class Singleton {
+        private Singleton() {
+        }
+
+        public static Singleton getInstance() {
+            return LazyHolder.INSTANCE;
+        }
+
+        private static class LazyHolder {
+            private static final Singleton INSTANCE = new Singleton();
+        }
+    }
+```
+
+static영역에 초기화를 하지만 객체가 필요한시점까지 초기화를 미루는 방식  
+LazyHolder 클래스의 변수가 없기 때문에 Singleton 클래스 로딩 시 LazyHolder 클래스를 초기화하지 않음  
+Singleton 클래스의 getInstance() 메서드에서 LazyHolder.INSTANCE를 참조하는 순간 Class가 로딩되며 초기화가 진행  
+Class를 로딩하고 초기화하는 시점은 thread-safe를 보장하기 때문에 volatile이나 synchronized 같은 키워드가 없어도  
+thread-safe 하면서 성능도 보장하는 아주 훌륭한 방법
 
 ```
 출처
